@@ -1,0 +1,51 @@
+// the problem is: user will input time for executing a child then the child will be stopped, main process will collect the status, then again executing the child process. when user will input 0 time for execution, then only thye child process will be be terminated immediately.
+
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<signal.h>
+#include<sys/types.h>
+#include<sys/wait.h>
+
+int main()
+{
+	pid_t pid;
+	pid=fork();
+	
+	if(!pid)
+	{
+		for(;;)
+		{
+			puts("I'm child");
+			sleep(1);
+		}
+	}
+	else 
+	{
+		kill(pid,SIGSTOP);
+		wait(&status);
+		sleep(1);
+		if(WIFSTOPPED(status)) printf("the process %d has been stopped with status %d\n",pid,WSTOPSIG(status));
+		else if(WIFCONTINUED(status)) printf("the process %d has been continued.\n",pid);
+		int time,status;
+		do
+		{
+			puts("input time for executing the child process: ");
+			scanf("%d",&time);
+			if(time>0)
+			{
+				kill(pid,SIGCONT);
+				sleep(time);
+				kill(pid,SIGSTOP);
+				//waitpid(pid,&status,WUNTRACED|WCONTINUED);
+				wait(&status);
+				if(WIFSTOPPED(status)) printf("the process %d has been stopped with status %d\n",pid,WSTOPSIG(status));
+				else if(WIFCONTINUED(status)) printf("the process %d has been continued.\n",pid);
+			}
+		}while(time>0);
+		
+		kill(pid,SIGKILL);
+		wait(NULL);
+	}
+}
