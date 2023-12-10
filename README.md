@@ -6,8 +6,8 @@ Topics are:
 ----------------------
 1. process management
 2. POSIX pthread
-3. Semaphore tool for synchronizing problems
-4. and course related some task and assignments
+3. Semaphore tool for synchronizing problems and
+4. course related some task and assignments
    
 Language: C
 ------------------------
